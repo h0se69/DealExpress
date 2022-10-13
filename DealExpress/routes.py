@@ -1,7 +1,8 @@
-from flask import render_template
-from DealExpress import flaskObj
+from flask import render_template, Blueprint
+#from DealExpress import flaskObj
 
+routes = Blueprint('routes', __name__)
 
-@flaskObj.route('/', methods=["GET"])
+@routes.route('/', methods=["GET"])
 def homePage():
     return render_template("home.html")

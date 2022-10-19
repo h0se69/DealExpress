@@ -1,26 +1,33 @@
 from flask import render_template, Blueprint
+
+from DealExpress.APIs.amazon import Amazon
+from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
+
+routes = Blueprint('routes', __name__)
 
 @routes.route('/', methods=["GET"])
 def homePage():
-    return render_template("home.html")
+    return render_template("Categories.html")
 
-#Change return_template html later 
-@routes.route('/searchResults', methods=['GET', 'POST'])
-def searchResults():
-    return render_template('home.html', title='Search Results')
+@routes.route('/product-search/', methods=["GET"])
+def productSearchPage():
+    return render_template("productSearch.html")
 
-#Change return_template html later 
-@routes.route('/login', methods=['GET', 'POST'])
-def login():
-    return render_template('home.html', title='Login')
+@routes.route('/subscription-pricing/', methods=["GET"])
+def subscriptionPricingHome():
+    return render_template("subscriptionPricing.html")
 
-#Change return_template html later
-@routes.route('/createAccount', methods=['GET', 'POST'])
-def createAccount():
-    return render_template('home.html', title='Create Account')
+# Amazon Routes API
+@routes.route('/product-search/api/amazon/<string:searchInput>/<string:pageID>', methods=["POST"])
+def productResults(searchInput:str, pageID:int):
+    return Amazon(searchInput).getProducts(pageID)
 
-#individual item page
-@routes.route('/itemPage', methods=['GET', 'POST'])
-def searchPage():
-    return render_template('specified_Item.html', title='Item')
+@routes.route('/product-search/api/amazon/bestsellers/', methods=["POST"])
+def productSearchHomePageData():
+    return Amazon(None).getBestSellerProducts()
+
+# Target Routes API
+@routes.route('/product-search/api/target/<string:UPC>/<string:amazonProductTitle>', methods=["POST"])
+def targetProductLookUp(UPC:str, amazonProductTitle: str):
+    return Target(amazonProductTitle).lookUpProduct_UPC(UPC)

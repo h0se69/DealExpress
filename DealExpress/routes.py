@@ -27,6 +27,10 @@ def productResults(searchInput:str, pageID:int):
 def productSearchHomePageData():
     return Amazon(None).getBestSellerProducts()
 
+@routes.route('/api/get-upc/<string:productASIN>', methods=["POST"])
+def productUPC_API(productASIN:str):
+    return Amazon(None).getProductUPC(productASIN)
+
 # Target Routes API
 @routes.route('/product-search/api/target/<string:UPC>/<string:amazonProductTitle>', methods=["POST"])
 def targetProductLookUp(UPC:str, amazonProductTitle: str):

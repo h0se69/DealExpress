@@ -28,15 +28,17 @@ function requestAmazonProduct(pageID, isReset){
         success: function(response){
             $.each(JSON.parse(response), function(index, responseData){
                 var productTitle = responseData[1]
+                var productASIN = responseData[2]
+
                 $("#cardRowContainer").append(
                 `<div class="card" style="min-height: 600px; max-height: 600px; width: 30%; margin-right: 2%; margin-top: 1%;overflow-y: auto;">
                     <img class="card-img-top" src=${responseData[0]} alt=${productTitle}>
                     <div class="card-body">
                         <p class="card-text">${productTitle}</p>
-                        <p class="card-text">${responseData[2]}</p>
+                        <p class="card-text">${productASIN}</p>
                         <p class="card-text">Price: ${responseData[4]}</p>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("820650850714", "`+ productTitle + `")'>View</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+productASIN+`", "`+ productTitle + `")'>View</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                         </div>
                         <small class="text-muted">9 mins</small>
@@ -62,15 +64,16 @@ function requestBestSellerAmazonProducts(){
         success: function(response){
             $.each(JSON.parse(response), function(index, responseData){
                 var productTitle = responseData[1]
+                var productASIN = responseData[2]
                 $("#cardRowContainer").append(
                 `<div class="card" style="min-height: 600px; max-height: 600px; width: 30%; margin-right: 2%; margin-top: 1%;overflow-y: auto;">
                     <img class="card-img-top" src=${responseData[0]} alt=${productTitle}>
                     <div class="card-body">
                         <p class="card-text">${productTitle}</p>
-                        <p class="card-text">${responseData[2]}</p>
+                        <p class="card-text">${productASIN}</p>
                         <p class="card-text">Price: ${responseData[4]}</p>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("820650850714", "`+ productTitle + `")'>View</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+productASIN+`", "`+ productTitle + `")'>View</button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
                         </div>
                         <small class="text-muted">9 mins</small>
@@ -97,13 +100,43 @@ function requestBestSellerAmazonProducts(){
 // ***** UPC HARD CODED RIGHT NOW ******
 // ***** UPC HARD CODED RIGHT NOW ******
 // ***** UPC HARD CODED RIGHT NOW ******
-function setModalData(productUPC, productTitle){
-    console.log(productUPC)
-    console.log(productTitle)
+async function setModalData(productASIN, productTitle){
+    var productUPC = await requestAmazonProductUPC(productASIN)
+
     $("#modalProductTitle").html(productTitle + " |  List of Retailers")
     targetAPICall(productUPC, productTitle)
-    console.log("setModalData RATIO")
 }
+
+
+// Request product UPC
+function requestAmazonProductUPC(productASIN){
+    var apiResponse = null
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: '/api/get-upc/'+productASIN,
+            method: "POST",
+            beforeSend: function (jqXHR) {
+                xhrPool.push(jqXHR);
+            },
+            success: function(response){
+                // var response = JSON.parse(response)
+                console.log("requestAmazonProductUPC: " + response['UPC'])
+                apiResponse =  response['UPC']
+                resolve(apiResponse)
+            },
+            error: function(response)
+            {
+                apiResponse =  response                
+                resolve(apiResponse)
+            }
+        });
+    });
+}
+    
+
+
+
+
 
 // Request target product based on productUPC
 
@@ -115,8 +148,9 @@ function setModalData(productUPC, productTitle){
 // ***** UPC HARD CODED RIGHT NOW ******
 // ***** UPC HARD CODED RIGHT NOW ******
 function targetAPICall(productUPC, productTitle){
+    console.log(productUPC)
     $.ajax({
-        url: '/product-search/api/target/'+searchInput+ "/"+productTitle,
+        url: '/product-search/api/target/'+productUPC+ "/"+productTitle,
         method: "POST",
         beforeSend: function (jqXHR) {
             xhrPool.push(jqXHR);

@@ -24,11 +24,5 @@ def create_app():
     return app
 
 
-# Init Database
-# 
-# 
-# 
-# 
-
 #from DealExpress import routes
 from DealExpress.APIs import *

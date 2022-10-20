@@ -2,14 +2,6 @@ xhrPool = [];
 var pageId = 1
 
 // Makes an ajax request to our api to get Amazon Products
-
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
 function requestAmazonProduct(pageID, isReset){
     $("#cardRowContainer").empty()
 
@@ -92,14 +84,7 @@ function requestBestSellerAmazonProducts(){
 // Sets the modal data 
 // Title
 // Call targetAPICall function
-
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
+    // Call rakutenAPICall function
 async function setModalData(productASIN, productTitle){
     var productUPC = await requestAmazonProductUPC(productASIN)
 
@@ -132,23 +117,33 @@ function requestAmazonProductUPC(productASIN){
         });
     });
 }
-    
 
 
-
-
+function rakutenAPICall(retailer){
+    var apiResponse = null
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: "/api/rakuten/get-cashback/" + retailer,
+            method: "POST",
+            beforeSend: function (jqXHR) {
+                xhrPool.push(jqXHR);
+            },
+            success: function(response){
+                apiResponse =  response['CashbackAmount']
+                resolve(apiResponse)
+            },
+            error: function(response)
+            {
+                apiResponse =  "NONE_ER"                
+                resolve(apiResponse)
+            }
+        });
+    });
+}
 
 // Request target product based on productUPC
-
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-// ***** UPC HARD CODED RIGHT NOW ******
-function targetAPICall(productUPC, productTitle){
-    console.log(productUPC)
+async function targetAPICall(productUPC, productTitle){
+    var cashbackAmount = await rakutenAPICall("Target")
     $.ajax({
         url: '/product-search/api/target/'+productUPC+ "/"+productTitle,
         method: "POST",
@@ -157,20 +152,37 @@ function targetAPICall(productUPC, productTitle){
         },
         success: function(response){
             var response = JSON.parse(response)
+            var sku = response['sku']
+            var price = response['price']
             console.log(response['sku'])
             console.log(response['price'])
-            $("#productModalBody tbody").append(`
-            <tr class="item" style="margin-left: 10%;">
-                <td><a href="https://www.target.com/p/h0seFNF/A-${response['sku']}" target="_blank">Target</a></td>
-                <td>${response['price']}</td>
-                <td>NO</td>
-                <td>4% Rakuten</td>
-            </tr>`)
+            if(price && sku !== undefined){
+                $("#productModalBody tbody").append(`
+                    <tr class="item" style="margin-left: 10%;">
+                        <td><a href="https://www.target.com/p/h0seFNF/A-${sku}" target="_blank">Target</a></td>
+                        <td>${price}</td>
+                        <td>NO</td>
+                        <td>${cashbackAmount}</td>
+                    </tr>`)
+            }
+            else{
+                $("#productModalBody tbody").append(`
+                <tr class="item" style="margin-left: 10%;">
+                    <td>Target</td>
+                    <td>NOT_AVAILABLE</td>
+                    <td>NOT_AVAILABLE</td>
+                    <td>${cashbackAmount}</td>
+                </tr>`)
+            }
+            
         },
         error: function(response){
             console.log('ERROR_' + response)
         }
     });
+
+
+
 }
 
 // Once the user scrolls to the bottom it makes another call to requestAmazonProduct

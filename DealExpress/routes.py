@@ -1,6 +1,7 @@
 from flask import render_template, Blueprint
 
 from DealExpress.APIs.amazon import Amazon
+from DealExpress.APIs.rakuten import Rakuten
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 
@@ -35,3 +36,8 @@ def productUPC_API(productASIN:str):
 @routes.route('/product-search/api/target/<string:UPC>/<string:amazonProductTitle>', methods=["POST"])
 def targetProductLookUp(UPC:str, amazonProductTitle: str):
     return Target(amazonProductTitle).lookUpProduct_UPC(UPC)
+
+# Rakuten Routes API
+@routes.route("/api/rakuten/get-cashback/<string:retailer>", methods=["POST"])
+def getRakutenCashback(retailer:str):
+    return Rakuten(retailer).rakutenCashBack()

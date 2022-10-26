@@ -122,11 +122,11 @@ class Rakuten():
     def genUUID(self):
         return str(uuid.uuid4())
 
-if __name__ == "__main__":
-    print(f"bruteforce-start: {datetime.now().time()}")
-    Rakuten("ebay").rakuten_BruteForceSearch()
-    print(f"bruteforce-end: {datetime.now().time()}\n")
+# if __name__ == "__main__":
+#     print(f"bruteforce-start: {datetime.now().time()}")
+#     Rakuten("ebay").rakuten_BruteForceSearch()
+#     print(f"bruteforce-end: {datetime.now().time()}\n")
 
-    print(f"normal-start: {datetime.now().time()}")
-    Rakuten("ebay").rakuten_StoreSearch()
-    print(f"normal-end: {datetime.now().time()}")
+#     print(f"normal-start: {datetime.now().time()}")
+#     Rakuten("ebay").rakuten_StoreSearch()
+#     print(f"normal-end: {datetime.now().time()}")

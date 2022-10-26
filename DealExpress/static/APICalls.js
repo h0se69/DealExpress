@@ -90,6 +90,7 @@ async function setModalData(productASIN, productTitle){
 
     $("#modalProductTitle").html(productTitle + " |  List of Retailers")
     targetAPICall(productUPC, productTitle)
+    ebayAPICall(productUPC, productTitle)
 }
 
 
@@ -180,10 +181,51 @@ async function targetAPICall(productUPC, productTitle){
             console.log('ERROR_' + response)
         }
     });
-
-
-
 }
+
+// Request ebay product based on productUPC
+async function ebayAPICall(productUPC, productTitle){
+
+    // NEED TO ADD PRODUCT TITLE CHECK IN EBAY FILE[0]
+
+    var cashbackAmount = await rakutenAPICall("eBay")
+    $.ajax({
+        url: '/product-search/api/ebay/'+ productUPC,
+        method: "POST",
+        beforeSend: function (jqXHR) {
+            xhrPool.push(jqXHR);
+        },
+        success: function(response){
+            var response = JSON.parse(response)
+            if(response !== undefined){
+                var productLink = response[0]['Link']
+                var price = response[0]['Price']
+                $("#productModalBody tbody").append(`
+                    <tr class="item" style="margin-left: 10%;">
+                        <td><a href="${productLink}" target="_blank">eBay</a></td>
+                        <td>${price}</td>
+                        <td>NO</td>
+                        <td>${cashbackAmount}</td>
+                    </tr>`)
+            }
+            else{
+                $("#productModalBody tbody").append(`
+                <tr class="item" style="margin-left: 10%;">
+                    <td>eBay</td>
+                    <td>NOT_AVAILABLE</td>
+                    <td>NOT_AVAILABLE</td>
+                    <td>${cashbackAmount}</td>
+                </tr>`)
+            }
+            
+        },
+        error: function(response){
+            console.log('ERROR_' + response)
+        }
+    });
+}
+
+
 
 // Once the user scrolls to the bottom it makes another call to requestAmazonProduct
 // to fetch more products to display

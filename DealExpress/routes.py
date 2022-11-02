@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint
 
-from DealExpress.APIs.amazon import Amazon
+#from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 

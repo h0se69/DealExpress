@@ -1,4 +1,7 @@
-from flask import render_template, Blueprint
+from .forms import SignupForm
+from flask import render_template, Blueprint, redirect, url_for
+from .models import User
+from DealExpress import db
 
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
@@ -7,6 +10,18 @@ from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 
 routes = Blueprint('routes', __name__)
+
+@routes.route('/create-account', methods=['GET', 'POST'])
+def createAccount():
+    signUp = SignupForm()
+    if signUp.validate_on_submit(): #button pressed, user filled all entries of form
+        #check password match, valid email, user not exists
+        #user_exists = User.query(email=signUp.email.data).first()
+        user = User(email=signUp.email.data, name=signUp.name.data, password1=signUp.password1.data)#use password1 data from form, p2 would work too after our checks
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('routes.homePage'))
+    return render_template("/signUp.html", title = 'Create Account', form=signUp)    
 
 @routes.route('/', methods=["GET"])
 def homePage():

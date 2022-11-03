@@ -1,0 +1,31 @@
+{% extends "base.html" %} 
+{% block content %}
+<!doctype html>
+<html lang="en">
+      <body>
+        <h1>Create Account</h1>
+        <form action="" method="post" novalidate>
+        {{form.hidden_tag()}}
+        <p>
+            {{form.name.label()}}<br>
+            {{form.name(size=32)}}
+        </p>
+        <p>
+            {{form.email.label()}}<br>
+            {{form.email(size=32)}}
+        </p>
+        <p>
+            {{form.password1.label()}}<br>
+            {{form.password1(size=32)}}
+        </p>
+        <p>
+            {{form.password2.label()}}<br>
+            {{form.password2(size=32)}}
+        </p>
+        <p>
+            {{form.submit}}
+        </p>
+        </form>
+        {% endblock %}
+      </body>
+</html>

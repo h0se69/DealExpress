@@ -2,10 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import sqlite3, os
 from os import path
+from flask_login import LoginManager
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 #flaskObj = Flask(__name__)
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
@@ -15,14 +17,13 @@ def create_app():
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     )
     db.init_app(app)
-
     from .routes import routes
     app.register_blueprint(routes, url_prefix ='/')
     
     with app.app_context():
         db.create_all()
     return app
-
-
+    
+flaskObj = Flask(__name__)
 #from DealExpress import routes
 from DealExpress.APIs import *

@@ -1,12 +1,16 @@
-from .forms import SignupForm, LoginForm, SearchForm
-from flask import render_template, Blueprint, redirect, url_for
-from .models import User
+from flask import render_template, Blueprint, redirect, url_for, flash
 from DealExpress import db
+from DealExpress.models import User
+from flask_login import login_user
+
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
 from DealExpress.APIs.rakuten import Rakuten
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
+from DealExpress.forms import SignupForm, LoginForm, SearchForm
+
+
 
 routes = Blueprint('routes', __name__)
 
@@ -31,7 +35,12 @@ def createAccount():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        return  #temp
+        user = User.query.filter_by(username=form.username.data).first() #Need to use bcrypt
+        if user & user.password1 == form.password.data:
+            login_user(user)
+            return redirect(url_for('routes.homePage'))
+        else:
+            flash('Login unsuccessful, username or password was wrong')
     return render_template("login.html", form=form)
 
 @routes.route('/loggedOut', methods=["GET"])

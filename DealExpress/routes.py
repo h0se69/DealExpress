@@ -1,19 +1,18 @@
-from .forms import SignupForm
+from .forms import SignupForm, LoginForm, SearchForm
 from flask import render_template, Blueprint, redirect, url_for
 from .models import User
 from DealExpress import db
-
-<<<<<<< HEAD
-#from DealExpress.APIs.amazon import Amazon
-=======
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
 from DealExpress.APIs.rakuten import Rakuten
->>>>>>> master
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 
 routes = Blueprint('routes', __name__)
+
+@routes.route('/', methods=["GET"])
+def homePage():
+    return render_template("Categories.html")
 
 @routes.route('/create-account', methods=['GET', 'POST'])
 def createAccount():
@@ -25,15 +24,24 @@ def createAccount():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('routes.homePage'))
-    return render_template("/signUp.html", title = 'Create Account', form=signUp)    
+    return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 
-@routes.route('/', methods=["GET"])
-def homePage():
-    return render_template("Categories.html")
+#Login page
+@routes.route('/login', methods=["Get", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return  #temp
+    return render_template("login.html", form=form)
+
+@routes.route('/loggedOut', methods=["GET"])
+def loggedOut():
+    return render_template("loggedOut.html")
 
 @routes.route('/product-search/', methods=["GET"])
 def productSearchPage():
-    return render_template("productSearch.html")
+    form = SearchForm()
+    return render_template("productSearch.html", form=form)
 
 @routes.route('/subscription-pricing/', methods=["GET"])
 def subscriptionPricingHome():

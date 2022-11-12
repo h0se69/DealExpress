@@ -10,8 +10,6 @@ from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 from DealExpress.forms import SearchForm, SignupForm, LoginForm
 
-
-
 routes = Blueprint('routes', __name__)
 
 @routes.route('/', methods=["GET"])
@@ -36,7 +34,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first() #Need to use bcrypt
-        if user & user.password1 == form.password.data:
+        if user & user.password == form.password.data:
             login_user(user)
             return redirect(url_for('routes.homePage'))
         else:

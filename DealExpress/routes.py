@@ -8,7 +8,7 @@ from DealExpress.APIs.eBay import eBay
 from DealExpress.APIs.rakuten import Rakuten
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
-from DealExpress.forms import SignupForm, LoginForm, SearchForm
+from DealExpress.forms import SearchForm, SignupForm, LoginForm
 
 
 

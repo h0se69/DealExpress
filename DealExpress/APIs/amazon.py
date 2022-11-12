@@ -10,7 +10,7 @@ class Amazon():
     @param searchInput = userInput 
     """
     def __init__(self, searchInput:str) -> None:
-        self.session = tls_client.Session(client_identifier="chrome_105")
+    #    self.session = tls_client.Session(client_identifier="chrome_105")
         self.searchInput = searchInput
 
     """
@@ -48,7 +48,7 @@ class Amazon():
         }
 
         bestSellersResponse = self.session.get('https://www.amazon.com/gp/new-releases/electronics/ref=zg_bsnr_nav_0', headers=headers)
-        bs = BeautifulSoup(bestSellersResponse.text, 'lxml')
+      #  bs = BeautifulSoup(bestSellersResponse.text, 'lxml')
         productList = bs.find_all("div", class_="p13n-sc-uncoverable-faceout")
         productDic = {}
         if(not productList):
@@ -169,7 +169,7 @@ class Amazon():
                         productASIN = productASIN["data-csa-c-item-id"].replace("amzn1.asin.1.","")
                         productName = product.find("span", class_=re.compile("a-size-medium a-color-base a-text-normal|a-size-base a-color-base a-text-normal|a-size-base-plus a-color-base a-text-normal")).text
                         productUPC = "UPC_API"
-                        # productUPC = self.getUPC(productASIN)
+                        productUPC = self.getUPC(productASIN)
                         if(productUPC != None):
                             productDic[i] = productImage, productName, productASIN, productUPC, productPrice
                     else:
@@ -178,35 +178,6 @@ class Amazon():
                     continue
 
         return json.dumps(productDic, indent=4)
-
-
-    def getProductUPC(self, productASIN):
-        headers = {
-            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "accept-language": "en-US,en;q=0.9",
-            "cache-control": "max-age=0",
-            "sec-ch-ua": "\"Chromium\";v=\"106\", \"Google Chrome\";v=\"106\", \"Not;A=Brand\";v=\"99\"",
-            "sec-ch-ua-mobile": "?0",
-            "sec-ch-ua-platform": "\"Windows\"",
-            "sec-fetch-dest": "document",
-            "sec-fetch-mode": "navigate",
-            "sec-fetch-site": "none",
-            "sec-fetch-user": "?1",
-            "upgrade-insecure-requests": "1"
-        }
-        apiResponse = self.session.post(f"https://h0sefnf-amazon-api.herokuapp.com/api/get-upc/?productASIN={productASIN}", headers=headers)
-
-        if(apiResponse.status_code != 200):
-            return {
-                "ERROR": "INVALID_RESPONSE_CODE_API_UPC"
-            }
-        else:
-            try:
-                return apiResponse.json()
-            except:
-                return {
-                    "ERROR": "INVALID_JSON_RESPONSE_API_UPC"
-                }
 
 
 

@@ -22,7 +22,7 @@ def createAccount():
     if signUp.validate_on_submit(): #button pressed, user filled all entries of form
         #check password match, valid email, user not exists
         #user_exists = User.query(email=signUp.email.data).first()
-        user = User(email=signUp.email.data, name=signUp.name.data, password1=signUp.password1.data)#use password1 data from form, p2 would work too after our checks
+        user = User(email=signUp.email.data, username=signUp.username.data, password=signUp.password.data)#use password1 data from form, p2 would work too after our checks
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('routes.homePage'))
@@ -33,9 +33,9 @@ def createAccount():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first() #Need to use bcrypt
-        if user & user.password == form.password.data:
-            login_user(user)
+        user = User.query.filter_by(username=form.username.data).first()    #Fetches user in db with the samer username
+        if user & user.password == form.password.data:      #Compares password from form and db (Need to use bcrypt)
+            login_user(user)    #Logins in user using login_manager
             return redirect(url_for('routes.homePage'))
         else:
             flash('Login unsuccessful, username or password was wrong')

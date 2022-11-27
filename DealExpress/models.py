@@ -9,10 +9,11 @@ class Item(db.Model):
     name = db.Column(db.String(64))
     price = db.Column(db.String(64))
     id = db.Column(db.Integer, primary_key=True)
-    item_image = db.Column()
+    #item_image = db.Column()
     retailer = db.Column(db.String(64))
     
 class User(db.Model, UserMixin):
+    username = db.Column(db.String(32))
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     email = db.Column(db.String(128))

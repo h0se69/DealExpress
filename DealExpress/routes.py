@@ -22,10 +22,14 @@ def createAccount():
     if signUp.validate_on_submit(): #button pressed, user filled all entries of form
         #check password match, valid email, user not exists
         #user_exists = User.query(email=signUp.email.data).first()
-        user = User(email=signUp.email.data, name=signUp.name.data, password1=signUp.password1.data)#use password1 data from form, p2 would work too after our checks
+        user = User(username=signUp.username.data, email=signUp.email.data, name=signUp.name.data, password=signUp.password.data)#use password1 data from form, p2 would work too after our checks
+        print("hello")
         db.session.add(user)
+        print("added")
         db.session.commit()
+        print("committed")
         return redirect(url_for('routes.homePage'))
+    print('bye')
     return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 
 #Login page

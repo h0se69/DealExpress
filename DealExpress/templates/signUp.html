@@ -11,16 +11,20 @@
             {{form.name(size=32)}}
         </p>
         <p>
+            {{form.username.label()}}<br>
+            {{form.username(size=32)}}
+        </p>
+        <p>
             {{form.email.label()}}<br>
             {{form.email(size=32)}}
         </p>
         <p>
-            {{form.password1.label()}}<br>
-            {{form.password1(size=32)}}
+            {{form.password.label()}}<br>
+            {{form.password(size=32)}}
         </p>
         <p>
-            {{form.password2.label()}}<br>
-            {{form.password2(size=32)}}
+            {{form.confirm_password.label()}}<br>
+            {{form.confirm_password(size=32)}}
         </p>
         <p>
             {{form.submit}}

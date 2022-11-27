@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, redirect, url_for, flash
 from DealExpress import db
+from DealExpress.APIs.bestbuy import BestBuy
 from DealExpress.models import User
 from flask_login import login_user
 
@@ -16,7 +17,7 @@ routes = Blueprint('routes', __name__)
 def homePage():
     return render_template("Categories.html")
 
-@routes.route('/create-account', methods=['GET', 'POST'])
+@routes.route('/create-account/', methods=['GET', 'POST'])
 def createAccount():
     signUp = SignupForm()
     if signUp.validate_on_submit(): #button pressed, user filled all entries of form
@@ -33,7 +34,7 @@ def createAccount():
     return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 
 #Login page
-@routes.route('/login', methods=["Get", "POST"])
+@routes.route('/login/', methods=["Get", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -45,7 +46,7 @@ def login():
             flash('Login unsuccessful, username or password was wrong')
     return render_template("login.html", form=form)
 
-@routes.route('/loggedOut', methods=["GET"])
+@routes.route('/loggedOut/', methods=["GET"])
 def loggedOut():
     return render_template("loggedOut.html")
 
@@ -59,7 +60,11 @@ def subscriptionPricingHome():
     return render_template("subscriptionPricing.html")
 
 # Amazon Routes API
-@routes.route('/product-search/api/amazon/<string:searchInput>/<string:pageID>', methods=["POST"])
+#
+# Amazon Routes API
+#
+# Amazon Routes API
+@routes.route('/product-search/api/amazon/<string:searchInput>/<string:pageID>/', methods=["POST"])
 def productResults(searchInput:str, pageID:int):
     return Amazon(searchInput).getProducts(pageID)
 
@@ -67,21 +72,42 @@ def productResults(searchInput:str, pageID:int):
 def productSearchHomePageData():
     return Amazon(None).getBestSellerProducts()
 
-@routes.route('/api/get-upc/<string:productASIN>', methods=["POST"])
+@routes.route('/api/get-upc/<string:productASIN>/', methods=["POST"])
 def productUPC_API(productASIN:str):
     return Amazon(None).getProductUPC(productASIN)
 
 # Target Routes API
-@routes.route('/product-search/api/target/<string:UPC>/<string:amazonProductTitle>', methods=["POST"])
+#
+# Target Routes API
+#
+# Target Routes API
+@routes.route('/product-search/api/Target/<string:UPC>/<string:amazonProductTitle>/', methods=["POST"])
 def targetProductLookUp(UPC:str, amazonProductTitle: str):
     return Target(amazonProductTitle).lookUpProduct_UPC(UPC)
 
 # eBay Routes API
-@routes.route('/product-search/api/ebay/<string:UPC>', methods=["POST"])
+#
+# eBay Routes API
+#
+# eBay Routes API
+@routes.route('/product-search/api/eBay/<string:UPC>/', methods=["POST"])
 def eBayProductLookUp(UPC:str):
     return eBay(UPC).searchProduct()
 
+# BestBuy Routes API
+#
+# BestBuy Routes API
+#
+# BestBuy Routes API
+@routes.route('/product-search/api/BestBuy/<string:UPC>/', methods=["POST"])
+def bestBuyProductLookUp(UPC:str):
+    return BestBuy().searchProductUPC(UPC)
+
 # Rakuten Routes API
-@routes.route("/api/rakuten/get-cashback/<string:retailer>", methods=["POST"])
+#
+# Rakuten Routes API
+#
+# Rakuten Routes API
+@routes.route("/api/rakuten/get-cashback/<string:retailer>/", methods=["POST"])
 def getRakutenCashback(retailer:str):
     return Rakuten(retailer).rakutenCashBack()

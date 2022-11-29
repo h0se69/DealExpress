@@ -2,7 +2,7 @@ from flask import render_template, Blueprint, redirect, url_for, flash
 from DealExpress import db
 from DealExpress.APIs.bestbuy import BestBuy
 from DealExpress.models import User
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
@@ -10,6 +10,7 @@ from DealExpress.APIs.rakuten import Rakuten
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 from DealExpress.forms import SearchForm, SignupForm, LoginForm
+from werkzeug.security import generate_password_hash
 
 routes = Blueprint('routes', __name__)
 
@@ -22,19 +23,36 @@ def createAccount():
     signUp = SignupForm()
     if signUp.validate_on_submit(): #button pressed, user filled all entries of form
         #check password match, valid email, user not exists
-        #user_exists = User.query(email=signUp.email.data).first()
-        user = User(username=signUp.username.data, email=signUp.email.data, name=signUp.name.data, password=signUp.password.data)#use password1 data from form, p2 would work too after our checks
-        print("hello")
-        db.session.add(user)
-        print("added")
-        db.session.commit()
-        print("committed")
-        return redirect(url_for('routes.homePage'))
-    print('bye')
+        user_exists = User.query.filter_by(email=signUp.email.data).first()
+        username_exists = User.query.filter_by(username=signUp.username.data).first()
+        if user_exists:
+            flash("User with this email already exists.")
+        elif username_exists:
+            flash("User with this username already exists.")
+        else:
+            user = User(username=signUp.username.data, email=signUp.email.data, name=signUp.name.data, password=generate_password_hash(signUp.password.data, method = 'sha256'), activate=1)#use password1 data from form, p2 would work too after our checks
+            db.session.add(user)
+            db.session.commit()
+            return redirect(url_for('routes.homePage'))
     return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 
+@routes.route('/delete-account/', methods=['GET', 'POST'])
+#@login_required()
+def deleteAccount():
+    #Set "activate" column of user in user table to 0 to signify deactivated account
+    #currentUsername = current_user.username
+    #user = User.query.filter_by(username=currentUsername).first()
+    #user.activate = 0
+    #db.session.commit()
+    return render_template("/base.html")
+    
+@routes.route('/reactivate-account/', methods=['GET','POST'])
+def reactivateAccount():
+
+    return render_template("/base.html")
+
 #Login page
-@routes.route('/login/', methods=["Get", "POST"])
+@routes.route('/login/', methods=["GET", "POST"])
 def login():
     form = LoginForm()
     if form.validate_on_submit():

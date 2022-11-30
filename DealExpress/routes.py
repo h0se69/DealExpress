@@ -20,11 +20,19 @@ def homePage():
 def createAccount():
     signUp = SignupForm()
     if signUp.validate_on_submit(): #button pressed, user filled all entries of form
+        user_exists = User.query.filter_by(email=signUp.email.data)
+        if user_exists:
+            flash("User with this email already exists.")
+        elif signUp.password.data != signUp.confirm_password.data:
+            flash("Passwords must match")
+        elif signUp.password.data.length < 5:
+            flash("Email must be longer than 4 characters")
+        else:
         #check password match, valid email, user not exists
         #user_exists = User.query(email=signUp.email.data).first()
-        user = User(email=signUp.email.data, username=signUp.username.data, password=signUp.password.data)#use password1 data from form, p2 would work too after our checks
-        db.session.add(user)
-        db.session.commit()
+            user = User(email=signUp.email.data, name=signUp.name.data, password=signUp.password.data)#use password1 data from form, p2 would work too after our checks
+            db.session.add(user)
+            db.session.commit()
         return redirect(url_for('routes.homePage'))
     return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 

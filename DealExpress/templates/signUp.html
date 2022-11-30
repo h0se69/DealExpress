@@ -4,26 +4,30 @@
 <html lang="en">
       <body>
         <form action="" method="post" novalidate>
-        {{form.hidden_tag()}}
-        <div class="form-group">
-            {{form.username.label}}
-            {{form.username(class_="form-control", size=32)}}
-        </div>
-        <p>
-            {{form.email.label()}}<br>
-            {{form.email(size=32)}}
-        </p>
-        <p>
-            {{form.password.label()}}<br>
-            {{form.password(size=32)}}
-        </p>
-        <p>
-            {{form.confirm_password.label()}}<br>
-            {{form.confirm_password(size=32)}}
-        </p>
-        <p>
+            {{form.hidden_tag()}}
+            <p>
+                {{form.name.label()}}<br>
+                {{form.name(size=32)}}
+            </p>
+            <p>
+                {{form.username.label()}}<br>
+                {{form.username(size=32)}}
+            </p>
+            <p>
+                {{form.email.label()}}<br>
+                {{form.email(size=32)}}
+            </p>
+            <p>
+                {{form.password.label()}}
+                {{form.password(size=32)}}
+               
+            </p>
+            <p>
+                {{form.confirm_password.label()}}
+                {{form.confirm_password(size=32)}}
+               
+            </p>
             {{form.submit}}
-        </p>
         </form>
         {% endblock %}
       </body>

@@ -56,8 +56,10 @@ def reactivateAccount():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        print("validated")
         user = User.query.filter_by(username=form.username.data).first()    #Fetches user in db with the samer username
         if user & user.password == form.password.data:      #Compares password from form and db (Need to use bcrypt)
+            print("user exist")
             login_user(user)    #Logins in user using login_manager
             return redirect(url_for('routes.homePage'))
         else:

@@ -2,41 +2,32 @@ xhrPool = [];
 var pageId = 1
 
 // Makes an ajax request to our api to get Amazon Products
-function requestAmazonProduct(pageID, isReset){
-    $("#cardRowContainer").empty()
-
+function requestAmazonProduct(pageId, isReset){
+    if(pageId === 1){
+        $("#cardRowContainer").empty()
+    }
     if(isReset === true){
         $("#cardRow").empty()
-        pageID = 1;
+        pageId = 1;
     }
-
     searchInput = $("#searchBarID").val()
+    if(searchInput === ""){
+        searchInput = "electronics"
+    }
     $.ajax({
-        url: '/product-search/api/amazon/'+searchInput+ "/"+pageId,
+        url: '/product-search/api/amazon/'+searchInput+ "/"+ pageId,
         method: "POST",
         beforeSend: function (jqXHR) {
             xhrPool.push(jqXHR);
         },
         success: function(response){
             $.each(JSON.parse(response), function(index, responseData){
-                var productTitle = responseData[1]
-                var productASIN = responseData[2]
+                var asin = responseData[0]
+                var title = responseData[1]
+                var price = responseData[2]
+                var imageURL = responseData[3]
 
-                $("#cardRowContainer").append(
-                `<div class="card" style="min-height: 600px; max-height: 600px; width: 30%; margin-right: 2%; margin-top: 1%;overflow-y: auto;">
-                    <img class="card-img-top" src=${responseData[0]} alt=${productTitle}>
-                    <div class="card-body">
-                        <p class="card-text">${productTitle}</p>
-                        <p class="card-text">${productASIN}</p>
-                        <p class="card-text">Price: ${responseData[4]}</p>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+productASIN+`", "`+ productTitle + `")'>View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                    </div>
-                </div>
-                `)
+                addProductCard(asin, title, price, imageURL)
             })
         },
         error: function(response){
@@ -55,23 +46,12 @@ function requestBestSellerAmazonProducts(){
         },
         success: function(response){
             $.each(JSON.parse(response), function(index, responseData){
-                var productTitle = responseData[1]
-                var productASIN = responseData[2]
-                $("#cardRowContainer").append(
-                `<div class="card" style="min-height: 600px; max-height: 600px; width: 30%; margin-right: 2%; margin-top: 1%;overflow-y: auto;">
-                    <img class="card-img-top" src=${responseData[0]} alt=${productTitle}>
-                    <div class="card-body">
-                        <p class="card-text">${productTitle}</p>
-                        <p class="card-text">${productASIN}</p>
-                        <p class="card-text">Price: ${responseData[4]}</p>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+productASIN+`", "`+ productTitle + `")'>View</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-                        </div>
-                        <small class="text-muted">9 mins</small>
-                    </div>
-                </div>
-                `)
+                var asin = responseData[0]
+                var title = responseData[1]
+                var price = responseData[2]
+                var imageURL = responseData[3]
+
+                addProductCard(asin, title, price, imageURL)
             })
         },
         error: function(response){
@@ -80,19 +60,38 @@ function requestBestSellerAmazonProducts(){
     });
 }
 
+function addProductCard(asin, title, price, imageURL){
+    $("#cardRowContainer").append(
+        `<div class="card" style="min-height: 600px; max-height: 600px; width: 30%; margin-right: 2%; margin-top: 1%;overflow-y: auto;">
+            <img class="card-img-top" src=${imageURL} alt=${title}_IMAGE>
+            <div class="card-body">
+                <p class="card-text">${title}</p>
+                <p class="card-text">${asin}</p>
+                <p class="card-text">Price: ${price}</p>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+asin+`", "`+ title +`", "` + price + `")'>View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                </div>
+                <br>
+                <small class="text-muted">Checked at ${getCurrentTime()}</small>
+            </div>
+        </div>
+    `)
+}
 
 // Sets the modal data 
 // Title
 // Call targetAPICall function
     // Call rakutenAPICall function
-async function setModalData(productASIN, productTitle){
-    var productUPC = await requestAmazonProductUPC(productASIN)
+async function setModalData(Asin, Title, Price){
+    $("#modalProductTitle").html(Title + "<br> <center>List of Retailers </center>")
 
-    $("#modalProductTitle").html(productTitle + " |  List of Retailers")
-    targetAPICall(productUPC, productTitle)
-    ebayAPICall(productUPC, productTitle)
+    var productUPC = await requestAmazonProductUPC(Asin)
+    addDealRow("Amazon", "", Price, "https://www.amazon.com/h0seFNF/dp/"+Asin, "NO", await rakutenAPICall("Amazon"))
+    retailerAPICall(productUPC, Title, "Target")
+    retailerAPICall(productUPC, Title, "eBay")
+    // retailerAPICall(productUPC, Title, "BestBuy")
 }
-
 
 // Request product UPC
 function requestAmazonProductUPC(productASIN){
@@ -119,7 +118,6 @@ function requestAmazonProductUPC(productASIN){
     });
 }
 
-
 function rakutenAPICall(retailer){
     var apiResponse = null
     return new Promise(function (resolve, reject) {
@@ -142,100 +140,52 @@ function rakutenAPICall(retailer){
     });
 }
 
-// Request target product based on productUPC
-async function targetAPICall(productUPC, productTitle){
-    var cashbackAmount = await rakutenAPICall("Target")
-    $.ajax({
-        url: '/product-search/api/target/'+productUPC+ "/"+productTitle,
-        method: "POST",
-        beforeSend: function (jqXHR) {
-            xhrPool.push(jqXHR);
-        },
-        success: function(response){
-            var response = JSON.parse(response)
-            var sku = response['sku']
-            var price = response['price']
-            console.log(response['sku'])
-            console.log(response['price'])
-            if(price && sku !== undefined){
-                $("#productModalBody tbody").append(`
-                    <tr class="item" style="margin-left: 10%;">
-                        <td><a href="https://www.target.com/p/h0seFNF/A-${sku}" target="_blank">Target</a></td>
-                        <td>${price}</td>
-                        <td>NO</td>
-                        <td>${cashbackAmount}</td>
-                    </tr>`)
-            }
-            else{
-                $("#productModalBody tbody").append(`
-                <tr class="item" style="margin-left: 10%;">
-                    <td>Target</td>
-                    <td>NOT_AVAILABLE</td>
-                    <td>NOT_AVAILABLE</td>
-                    <td>${cashbackAmount}</td>
-                </tr>`)
-            }
-            
-        },
-        error: function(response){
-            console.log('ERROR_' + response)
-        }
-    });
-}
-
-// Request ebay product based on productUPC
-async function ebayAPICall(productUPC, productTitle){
-
-    // NEED TO ADD PRODUCT TITLE CHECK IN EBAY FILE[0]
-
-    var cashbackAmount = await rakutenAPICall("eBay")
-    $.ajax({
-        url: '/product-search/api/ebay/'+ productUPC,
-        method: "POST",
-        beforeSend: function (jqXHR) {
-            xhrPool.push(jqXHR);
-        },
-        success: function(response){
-            var response = JSON.parse(response)
-            if(response !== undefined){
-                var productLink = response[0]['Link']
-                var price = response[0]['Price']
-                $("#productModalBody tbody").append(`
-                    <tr class="item" style="margin-left: 10%;">
-                        <td><a href="${productLink}" target="_blank">eBay</a></td>
-                        <td>${price}</td>
-                        <td>NO</td>
-                        <td>${cashbackAmount}</td>
-                    </tr>`)
-            }
-            else{
-                $("#productModalBody tbody").append(`
-                <tr class="item" style="margin-left: 10%;">
-                    <td>eBay</td>
-                    <td>NOT_AVAILABLE</td>
-                    <td>NOT_AVAILABLE</td>
-                    <td>${cashbackAmount}</td>
-                </tr>`)
-            }
-            
-        },
-        error: function(response){
-            console.log('ERROR_' + response)
-        }
-    });
-}
-
-
-
-// Once the user scrolls to the bottom it makes another call to requestAmazonProduct
-// to fetch more products to display
-$(window).scroll(function() {
-    if($(window).scrollTop() + $(window).height() > $(document).height() - 100) {
-        console.log("BOTTOM OF PAGE MAKE AJAX REQ")
-        pageID = pageID + 1;
-        requestAmazonProduct(pageID, false)
+// Ajax Request to API for x Retailer and get data
+async function retailerAPICall(productUPC, productTitle, retailerName){
+    var cashbackAmount = await rakutenAPICall(retailerName)
+    var urlTarget = '/product-search/api/' + retailerName + '/' + productUPC + "/"
+    if(retailerName === "Target"){
+        urlTarget = '/product-search/api/' + retailerName + '/' + productUPC + "/" + productTitle
     }
-});
+    $.ajax({
+        url: urlTarget,
+        method: "POST",
+        beforeSend: function (jqXHR) {
+            xhrPool.push(jqXHR);
+        },
+        success: function(response){
+            var response = JSON.parse(response)
+            var Title = response['Title']
+            var Price = response['Price']
+            var Link = response['Link']
+            var onSale = "NO"
+            addDealRow(retailerName, Title, Price, Link, onSale, cashbackAmount)
+        },
+        error: function(response){
+            console.log('ERROR_' + response)
+        }
+    });
+}
+
+// Add Deal Data to table *works with retailerAPICall*
+function addDealRow(retailerName, Title, Price, Link, onSale, cashbackAmount){
+    $("#productModalBody tbody").append(`
+    <tr class="item" style="margin-left: 10%;">
+        <td><a href=${Link} target="_blank">${retailerName}</a></td>
+        <td>${Price && Link !== undefined ? Price: "NOT_AVAILABLE"}</td>
+        <td>${Price && Link !== undefined ? onSale: "NOT_AVAILABLE"}</td>
+        <td>${cashbackAmount}</td>
+    </tr>`) 
+}
+
+// to fetch more products to display
+function requestMoreProducts(){
+    console.log(pageId)
+    pageId = pageId + 1;
+    console.log(pageId)
+    console.log("space")
+    requestAmazonProduct(pageId, false)
+}
 
 // Kill pending AJAX requests incase they are slow/timeout 
 // Only functions when you close the modal
@@ -245,4 +195,15 @@ function killAjaxReq(){
         console.log("Killed AJAX Requests")
         jqXHR.abort();
   });
+}
+
+function getCurrentTime(){
+    var today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    if(today.getHours() > 11){
+        return time + "PM"
+    }
+    else{
+        return time + "AM"
+    }
 }

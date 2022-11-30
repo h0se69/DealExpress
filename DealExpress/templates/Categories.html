@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -7,109 +7,112 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
-
-    <title>Base Categories</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/album/">
-
+    <title>Base Category for Items</title>
     <!-- Bootstrap core CSS -->
     <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="album.css" rel="stylesheet">
+    <link href = "DealExpress/css/modified.css"rel="stylesheet">
   </head>
-
   <body>
     {% block content %}
+    <!-- Navigation Bar Start-->
     <header>
-      <div class="collapse bg-dark" id="navbarHeader">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-8 col-md-7 py-4">
-              <h4 class="text-white">About</h4>
-            </div>
-    
-          </div>
-        </div>
-      </div>
-      <div class="navbar navbar-dark bg-dark box-shadow">
-        <div class="container d-flex justify-content-between">
-          <a href="#" class="navbar-brand d-flex align-items-center">
-            <strong>Categories</strong>
-          </a>
-          <button class = "navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
-            <span class = "navbar-toggler-icon"></span>
-          </button>
-        </div>
-      </div>
-    </header>
-
-    <main role = "main">
-      <section class = "jumbotron text-center">
-        <div class = "container">
-          <h1 class = "jumbotron-heading">Categories</h1>
-          <p class = "lead text-muted">Click on what you're looking for.</p>
-        </div>
-      </section>
-
-      <div class="container marketing">
-        <!-- Category Bubbles -->
-        <div class="row">
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140" margin-left:auto margin-right:auto>
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4">
-            <img class="rounded-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
-            <br></br>
-            <p><a class="btn btn-secondary" href="#" role="button">View deals &raquo;</a></p>
-          </div><!-- /.col-lg-4 -->
-        </div><!-- /.row -->
-                  </div>
-                </div>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Deal Express</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+  
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <a class="nav-link" href="#">Categories <span class="sr-only">(current)</span></a>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
               </div>
-            </div>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </header>
+    <!-- Navigation Bar End-->
+    <div class="card-deck" style="padding-top: 50px;">
+      <div class="card">
+        <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+          <img class="rounded-circle" src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+          <h4 class="card-header">Beauty</h4>
+          <p>
+          <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+          </p>   
+        </div>
+      </div>
+        <div class="card">
+          <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+            <img class="rounded-circle" src="https://images.unsplash.com/photo-1602810319250-a663f0af2f75?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8ODB8fGNsb3RoaW5nJTIwc2hvcHBpbmd8ZW58MHx8MHx8&auto=format&fit=crop&w=400&q=60" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+            <h4 class="card-header">Clothing</h4>
+            <p>
+            <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+            </p>   
           </div>
+        </div>
+        <div class="card">
+          <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+            <img class="rounded-circle" src="https://images.unsplash.com/photo-1567016432779-094069958ea5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8ZnVybml0dXJlfGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+            <h4 class="card-header">Furniture</h4>
+            <p>
+            <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+            </p>   
+          </div>
+        </div>
+    </div>
+    <br> 
+    <div class="card-deck">
+      <div class="card">
+        <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+          <img class="rounded-circle" src="https://images.unsplash.com/photo-1601524909162-ae8725290836?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjN8fGVsZWN0cm9uaWNzfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+          <h4 class="card-header">Electronics</h4>
+          <p>
+          <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+          </p>   
         </div>
       </div>
 
-    </main>
-
-    <footer class="text-muted">
-      <div class="container">
-        <p class="float-right">
-          <a href="#">Back to top</a>
-        </p>
+      <div class="card">
+        <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+          <img class="rounded-circle" src="https://images.unsplash.com/photo-1506551109886-6101f48c1ab9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fGRvZ3N8ZW58MHwyfDB8fA%3D%3D&auto=format&fit=crop&w=400&q=60" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+          <h4 class="card-header">Pets</h4>
+          <p>
+          <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+          </p>   
+        </div>
       </div>
-    </footer>
 
+      <div class="card">
+        <div class="card-body" style="border-top-style: solid;border-right-width: 3px;border-right-style: solid;border-left-width: 3px;border-left-style: solid;border-bottom-width: 3px;border-bottom-style: solid;border-top-width: 3px; border-color:#343a40;">
+          <img class="rounded-circle" src="https://images.unsplash.com/photo-1621508638997-e30808c10653?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTk1fHxzdHVmZmVkJTIwdG95c3xlbnwwfDJ8MHx8&auto=format&fit=crop&w=500&q=60" alt="Generic placeholder image" width="140" height="140" style="margin-bottom: 10px;">
+          <h4 class="card-header">Toys</h4>
+          <p>
+          <a class="btn btn-secondary" href="#" role="button" style="margin-top: 10px;">View deals »</a>       
+          </p>   
+        </div>
+      </div>
+    </div>  
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
     <script src="../../assets/js/vendor/popper.min.js"></script>
     <script src="../../dist/js/bootstrap.min.js"></script>
-    <script src="../../assets/js/vendor/holder.min.js"></script>
     {% endblock%}
   </body>
 </html>

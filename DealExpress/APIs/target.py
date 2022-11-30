@@ -18,19 +18,7 @@ class Target():
     Returns the products title, price, sku in json format
     """
     def lookUpProduct_UPC(self, upc):
-        headers = {
-            'authority': 'redsky.target.com',
-            'accept': 'application/json',
-            'accept-language': 'en-US,en;q=0.9',
-            'origin': 'https://www.target.com',
-            'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'empty',
-            'sec-fetch-mode': 'cors',
-            'sec-fetch-site': 'same-site',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36',
-        }
+        headers = { 'authority': 'redsky.target.com', 'accept': 'application/json', 'accept-language': 'en-US,en;q=0.9', 'origin': 'https://www.target.com', 'sec-ch-ua': '"Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"', 'sec-ch-ua-mobile': '?0', 'sec-ch-ua-platform': '"Windows"', 'sec-fetch-dest': 'empty', 'sec-fetch-mode': 'cors', 'sec-fetch-site': 'same-site', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36', }
 
         params = {
             'key': '9f36aeafbe60771e321a7cc95a78140772ab3e96', #API KEY
@@ -65,14 +53,13 @@ class Target():
 
                 if(productEqualityRatio >= highestMatchingRate):
                     closestMatchingProductDic = {
-                        "title": title, 
-                        "price": price, 
-                        "sku": tcin
+                        "Title": title, 
+                        "Price": price, 
+                        "Link": f"https://www.target.com/p/h0seFNF/A-{tcin}"
                     }
                     highestMatchingRate = productEqualityRatio
             except Exception as e:
                 continue
-        
         return json.dumps(closestMatchingProductDic, indent=4)
 
     """

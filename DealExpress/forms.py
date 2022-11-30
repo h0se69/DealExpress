@@ -16,7 +16,7 @@ class LoginForm(FlaskForm):
 
 #SignUp Form that recieves inputs from the user
 class SignupForm(FlaskForm):
-    name = StringField("name", validators=[DataRequired()])
+    name = StringField("Name", validators=[DataRequired()])
     username = StringField("UserName", validators=[DataRequired(), Length(min=3, max=20)])
     email = StringField("Email", validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])

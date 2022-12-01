@@ -15,6 +15,10 @@ routes = Blueprint('routes', __name__)
 
 @routes.route('/', methods=["GET"])
 def homePage():
+    return render_template("home.html")
+
+@routes.route('/categories/', methods=["GET"])
+def basicCat():
     return render_template("Categories.html")
 
 @routes.route('/create-account/', methods=['GET', 'POST'])
@@ -31,7 +35,7 @@ def createAccount():
         print("committed")
         return redirect(url_for('routes.homePage'))
     print('bye')
-    return render_template("/signUp.html", title = 'Create Account', form=signUp)     
+    return render_template("/signUp.html/", title = 'Create Account', form=signUp)     
 
 #Login page
 @routes.route('/login/', methods=["Get", "POST"])

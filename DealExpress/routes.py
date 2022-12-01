@@ -2,15 +2,14 @@ from flask import render_template, Blueprint, redirect, url_for, flash
 from DealExpress import db
 from DealExpress.APIs.bestbuy import BestBuy
 from DealExpress.models import User
-from flask_login import login_user, current_user
-
+from flask_login import login_user, current_user, login_required, logout_user
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
 from DealExpress.APIs.rakuten import Rakuten
 from DealExpress.APIs.target import Target
 #from DealExpress import flaskObj
 from DealExpress.forms import SearchForm, SignupForm, LoginForm
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 routes = Blueprint('routes', __name__)
 
@@ -56,17 +55,19 @@ def reactivateAccount():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first() #Need to use bcrypt
-        if user & user.password == form.password.data:
-            login_user(user)
+        user = User.query.filter_by(username=form.username.data).first()    #Fetches user in db with the samer username
+        if user != None and check_password_hash(user.password, form.password.data):      #Compares password from form and db (Need to use bcrypt)
+            login_user(user)    #Logins in user using login_manager
             return redirect(url_for('routes.homePage'))
         else:
             flash('Login unsuccessful, username or password was wrong')
     return render_template("login.html", form=form)
 
-@routes.route('/loggedOut/', methods=["GET"])
-def loggedOut():
-    return render_template("loggedOut.html")
+@routes.route('/logOut/', methods=["GET", "POST"])
+@login_required
+def logOut():
+    logout_user()
+    return render_template("home.html")
 
 @routes.route('/product-search/', methods=["GET"])
 def productSearchPage():

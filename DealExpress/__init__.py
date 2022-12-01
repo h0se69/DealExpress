@@ -7,7 +7,6 @@ from flask_login import LoginManager
 basedir = os.path.abspath(os.path.dirname(__file__))
 #flaskObj = Flask(__name__)
 db = SQLAlchemy()
-login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
@@ -16,6 +15,12 @@ def create_app():
         # where to store app.db (database file)
         SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
     )
+    from .models import User
+    login_manager = LoginManager(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
     db.init_app(app)
     from .routes import routes
     app.register_blueprint(routes, url_prefix ='/')
@@ -23,7 +28,6 @@ def create_app():
     with app.app_context():
         db.create_all()
     return app
-    
-flaskObj = Flask(__name__)
+
 #from DealExpress import routes
 from DealExpress.APIs import *

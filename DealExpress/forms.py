@@ -23,7 +23,7 @@ class SignupForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField(label="Sign up")
     #Helper function that makes sure username is availble
-    def validate_username(self, username):
+    '''def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if User:
             raise ValidationError("username already taken!")
@@ -33,3 +33,4 @@ class SignupForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if User:
             raise ValidationError("email already used!")
+            '''

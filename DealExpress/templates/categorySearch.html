@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Specific Item Page</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/album/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="album.css" rel="stylesheet">
+  </head>
+
+  <body>
+    {% block content %}
+    <header>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <strong>Price for Items </strong>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main role="main">
+
+      <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Item Search</h1>
+          <input class="form-control mr-sm-2" type="search" placeholder="Search for Product" aria-label="Search" style="width: 80%;" id="searchBarID">
+          <button class="btn btn-outline-success my-2 my-sm-0" onclick="requestAmazonProduct(1, true)">Search</button>
+        </div>
+      </section>
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+            <script>requestCategoryAmazonProducts(`{{ category }}`, 1 )</script>
+            <div class="row" id="cardRowContainer">
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+    <!-- Modal -->
+    <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalProductTitle">Modal title</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="display: table-cell; vertical-align: middle; text-align: center; overflow-x: auto;" id="productModalBody">
+            <table style="display: inline-block;" id="modalTable">
+                <thead>
+                    <style>
+                        td, th {
+                            border: 1px solid #dddddd;
+                            text-align: left;
+                            padding: 8px;
+                        }
+                    </style>
+                    <tr style="margin-left: 10%;">
+                        <th>Retailer</th>
+                        <th>Price</th>
+                        <th>Sale</th>
+                        <th>Cashback Available</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <p id="last-updated" class="mr-auto"></p>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="killAjaxReq()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="text-muted">
+      <div class="container">
+        <p style="text-align: center;">
+            <a onclick="requestMoreProducts()">LOAD MORE PRODUCTS</a>
+        </p>
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
+    {% endblock%}
+  </body>
+</html>

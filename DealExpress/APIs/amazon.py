@@ -165,7 +165,7 @@ class Amazon():
     def getProductUPC(self, productASIN):
         headers = { "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", "accept-language": "en-US,en;q=0.9", "cache-control": "max-age=0", "sec-ch-ua": "\"Chromium\";v=\"106\", \"Google Chrome\";v=\"106\", \"Not;A=Brand\";v=\"99\"", "sec-ch-ua-mobile": "?0", "sec-ch-ua-platform": "\"Windows\"", "sec-fetch-dest": "document", "sec-fetch-mode": "navigate", "sec-fetch-site": "none", "sec-fetch-user": "?1", "upgrade-insecure-requests": "1" }
 
-        apiResponse = self.session.post(f"https://h0sefnf-amazon-api.herokuapp.com/api/get-upc/?productASIN={productASIN}", headers=headers)
+        apiResponse = self.session.post(f"https://paid-h0sefnf-amazonapi.herokuapp.com/api/get-upc/?productASIN={productASIN}", headers=headers)
         if(apiResponse.status_code != 200):
             return {
                 "ERROR": "INVALID_RESPONSE_CODE_API_UPC"

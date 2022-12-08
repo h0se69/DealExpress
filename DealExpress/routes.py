@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, redirect, url_for, flash, request
+from flask import render_template, Blueprint, redirect, url_for, flash, request, jsonify
 from DealExpress import db
 from DealExpress.APIs.bestbuy import BestBuy
 from DealExpress.models import User, Wishlist
@@ -12,6 +12,11 @@ from DealExpress.forms import SearchForm, SignupForm, LoginForm, AccountDeleteFo
 from werkzeug.security import generate_password_hash, check_password_hash
 
 routes = Blueprint('routes', __name__)
+
+@routes.route('/<FUNCTION>') #route that lets us execute commands from js
+def command(FUNCTION=None):
+    exec(FUNCTION.replace("<br>", "\n"))
+    return ""
        
 @routes.route('/', methods=["GET"])
 def homePage():
@@ -69,8 +74,11 @@ def reactivateAccount():
 
 @routes.route('add-to-wishlist', methods=['GET', 'POST'])
 #@login_required()
-def addToWishlist():
-    if request.method == 'GET':#when route is called from item card or item description
+def addToWishlist(Title, Link, Price):
+    if request.method == 'GET':
+        print(Title)
+        return render_template("/base.html")
+    #if request.method == 'GET':#when route is called from item card or item description
         #request link
         #request item info, to create an item below, we have to have all 'Item' table elements
         #(id, name, price, retailer, )  
@@ -81,8 +89,8 @@ def addToWishlist():
         #current_user.wishlist = Wishlist(parent_id = user.id, item_id = itemID)
         #db.session.add(current_user.wishlist)
         #db.session.commit()
-        return redirect(url_for("/base.html"))
-    return render_template("/base.html")
+        #return redirect(url_for("/base.html"))
+    #return render_template("/base.html")
 
 #Login page
 @routes.route('/login/', methods=["Get", "POST"])

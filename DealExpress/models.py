@@ -7,6 +7,7 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     price = db.Column(db.String(64))
+    link = db.Column(db.String(1024))
     #item_image = db.Column()
     retailer = db.Column(db.String(64))
     #category_id = db.Column(db.Integer, db.ForeignKey('category.id'))

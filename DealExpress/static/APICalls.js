@@ -94,13 +94,41 @@ function addProductCard(asin, title, price, imageURL){
                 <p class="card-text">Price: ${price}</p>
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+asin+`", "`+ title +`", "` + price + `")'>View</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick='pythonCall('addToWishlist("`+asin+`", "`+ title +`", "` + price + `")')>Add To Wishlist</button>
                 </div>
                 <br>
                 <small class="text-muted">Checked at ${getCurrentTime()}</small>
             </div>
         </div>
     `)
+}
+
+function pythonCall(func){
+    var request = new XMLHttpRequest()
+    request.open('GET', "/" + func, true)
+    request.send()
+}
+
+function passData(Asin, Title, Price){
+    var name = Title;
+    var price = Price;
+    var link = Asin;
+    $.ajax(
+    {
+        method:'GET',
+        url:'/addToWishlist' + "/" + name + "/" + price + "/" + link ,
+        success:function(data) {
+            var reply=data.reply;
+            if(reply == "success")
+            {
+                return;
+            }
+            else{
+                alert("error")
+            }
+        }
+    }
+    )
 }
 
 // Sets the modal data 

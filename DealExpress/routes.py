@@ -1,8 +1,8 @@
 from flask import render_template, Blueprint, redirect, url_for, flash, request
 from DealExpress import db
 from DealExpress.APIs.bestbuy import BestBuy
-from DealExpress.models import User, Wishlist
-from flask_login import login_user, current_user, login_required
+from DealExpress.models import User, Wishlist, Item
+from flask_login import login_user, current_user, login_required, logout_user
 from DealExpress.APIs.amazon import Amazon
 from DealExpress.APIs.eBay import eBay
 from DealExpress.APIs.rakuten import Rakuten
@@ -67,42 +67,60 @@ def reactivateAccount():
         return redirect(url_for('routes.login'))
     return render_template("/reactivateAccount.html")
 
-@routes.route('add-to-wishlist', methods=['GET', 'POST'])
-#@login_required()
-def addToWishlist():
-    if request.method == 'GET':#when route is called from item card or item description
-        #request link
-        #request item info, to create an item below, we have to have all 'Item' table elements
-        #(id, name, price, retailer, )  
-        #create item 
-        #item = Item(id=id,name=name,price=price,retailer=retailer)
-        #get item id: itemID = item.id
-        #get user wishlist: wishlist = current_user.wishlist
-        #current_user.wishlist = Wishlist(parent_id = user.id, item_id = itemID)
-        #db.session.add(current_user.wishlist)
-        #db.session.commit()
-        return redirect(url_for("/base.html"))
-    return render_template("/base.html")
+@routes.route('/addToWishlist/<string:Title>/<string:Price>/<string:Asin>', methods=['GET', 'POST'])
+@login_required
+def addToWishlist(Title, Price, Asin):
+    if request.method == 'GET':
+        #create user wishlist
+        current_user.wishlist = Wishlist(parent_id = current_user.id) #need to create wishlist first to use wishlist id when creating item
+        db.session.add(current_user.wishlist)
+        db.session.commit
+        print(current_user.wishlist)
+        #add item to item database, linking with current user's wishlist using current_user.wishlist.id
+        item = Item(name=Title, price=Price, link=Asin, parent_id = current_user.wishlist.id)
+        db.session.add(item)
+        db.session.commit()
+        print(item.id)
+        #https://stackoverflow.com/questions/49020321/one-to-one-relationship-db-model-not-working
+        db.session.add(current_user.wishlist)
+        db.session.commit()
+
+        #print(Title)
+        #print(Price)
+        #print(Asin)
+        return "success"
+        return render_template("/base.html")
+
+@routes.route('viewWishlist', methods=['GET', 'POST'])
+@login_required
+def viewWishlist():
+    items = Wishlist.query.filter_by(user_id=current_user.id).all() #query for rows in wishlist that are related to current user id, 
+    #as these hold itemIDs for items added to wishlist
+    return render_template("base.html")  
+    
 
 #Login page
-@routes.route('/login/', methods=["Get", "POST"])
+@routes.route('/login/', methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if current_user.is_authenticated:
+        flash("User is already logged in")
+        return redirect(url_for('routes.homePage'))
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first() #Need to use bcrypt
-        #if user.active == 0: #means the user is deactivated
-            #flash("Please reactivate account.") 
-            #return redirect(url_for('routes.reactivateAccount'))
-        if user & user.password == form.password.data:
-            login_user(user)
+        user = User.query.filter_by(username=form.username.data).first()    #Fetches user in db with the samer username
+        if user != None and check_password_hash(user.password, form.password.data):      #Compares password from form and db (Need to use bcrypt)
+            login_user(user)    #Logins in user using login_manager
+            flash("Welcome " + user.name)
             return redirect(url_for('routes.homePage'))
         else:
             flash('Login unsuccessful, username or password was wrong')
     return render_template("login.html", form=form)
 
-@routes.route('/loggedOut/', methods=["GET"])
-def loggedOut():
-    return render_template("loggedOut.html")
+@routes.route('/logOut/', methods=["GET", "POST"])
+@login_required
+def logOut():
+    logout_user()
+    return render_template("home.html")
 
 @routes.route('/product-search/', methods=["GET"])
 def productSearchPage():

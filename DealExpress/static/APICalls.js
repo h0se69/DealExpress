@@ -94,19 +94,13 @@ function addProductCard(asin, title, price, imageURL){
                 <p class="card-text">Price: ${price}</p>
                 <div class="btn-group">
                     <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#productModal" onclick='setModalData("`+asin+`", "`+ title +`", "` + price + `")'>View</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick='pythonCall('addToWishlist("`+asin+`", "`+ title +`", "` + price + `")')>Add To Wishlist</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick='passData("`+asin+`", "`+ title +`", "` + price + `")')>Add To Wishlist</button>
                 </div>
                 <br>
                 <small class="text-muted">Checked at ${getCurrentTime()}</small>
             </div>
         </div>
     `)
-}
-
-function pythonCall(func){
-    var request = new XMLHttpRequest()
-    request.open('GET', "/" + func, true)
-    request.send()
 }
 
 function passData(Asin, Title, Price){
@@ -117,14 +111,14 @@ function passData(Asin, Title, Price){
     {
         method:'GET',
         url:'/addToWishlist' + "/" + name + "/" + price + "/" + link ,
-        success:function(data) {
-            var reply=data.reply;
-            if(reply == "success")
-            {
-                return;
+        success:function(data) { 
+            console.log(data)
+            var reply=data;
+            if(reply === "success"){
+                alert("Saved to wishlist")
             }
             else{
-                alert("error")
+                alert("Must be logged in")
             }
         }
     }

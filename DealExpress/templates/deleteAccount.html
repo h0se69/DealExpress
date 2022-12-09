@@ -79,12 +79,12 @@
       <body>
         <img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Delete Account</h1>
-        <h2 class="h3 mb-3 fw-normal"> Enter username below to confirm</h2>
+        <p> Enter username to confirm</p>
         <form action="" method="post" novalidate>
         {{form.hidden_tag()}}
         <p>
-            {{form.username.label()}}<br>
-            {{form.username(size=32)}}
+            {{form.username(size=32)}}<br>
+            {{form.username.label()}}
         </p>
         <p>
             {{form.submit}}

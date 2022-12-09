@@ -5,7 +5,7 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Create Account</title>
+        <title>Reactivate Account</title>
 
         <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
     <link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -80,29 +80,17 @@
       <body class="text-center" style="margin-top: 100px;">
       <body>
         <img class="mb-4" src="/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Create Account</h1>
+        <h1 class="h3 mb-3 fw-normal">Reactivate Account</h1>
         <form action="" method="post" novalidate>
         {{form.hidden_tag()}}
-        <p>
-            {{form.name.label()}}<br>
-            {{form.name(size=32)}}
-        </p>
         <p>
             {{form.username.label()}}<br>
             {{form.username(size=32)}}
         </p>
         <p>
-            {{form.email.label()}}<br>
-            {{form.email(size=32)}}
-        </p>
-        <p>
-            {{form.password.label()}}<br>
-            {{form.password(size=32)}}
-        </p>
-        <p>
-            {{form.confirm_password.label()}}<br>
-            {{form.confirm_password(size=32)}}
-        </p>
+          {{form.password.label()}}<br>
+          {{form.password(size=32)}}
+      </p>
         <p>
             {{form.submit}}
         </form>

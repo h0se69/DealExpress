@@ -29,4 +29,5 @@ class AccountDeleteForm(FlaskForm):
 
 class ReactivateAccountForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired(message='Please enter your password.')])
     submit = SubmitField(label="Reactivate Account")

@@ -26,11 +26,10 @@ def create_app():
     app.register_blueprint(routes, url_prefix ='/')
     
     login_manager.login_view = "routes.login"
-    from .forms import LoginForm
     @login_manager.unauthorized_handler
     def unauthorized():
         flash("You must be signed in to access this page.")
-        return render_template("login.html", form = LoginForm())
+        return render_template("home.html")
     
     with app.app_context():
         db.create_all()

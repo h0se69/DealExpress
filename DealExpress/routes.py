@@ -53,19 +53,29 @@ def deleteAccount():
             user = User.query.filter_by(username=username).first()
             user.active = 0 #set active column of user table to 0 to indicate inactive user
             db.session.commit()
+            flash("Account deleted")
+            logout_user()
+            return redirect(url_for('routes.homePage'))
     return render_template("/deleteAccount.html", form = deleteAccount)
     
 @routes.route('/reactivate-account', methods=['GET','POST'])
 def reactivateAccount():
     reactivate = ReactivateAccountForm()
+    if request.method == 'GET':
+        return render_template("/reactivateAccount.html", form = reactivate)
     if reactivate.validate_on_submit:
         username = reactivate.username.data
         user = User.query.filter_by(username=username).first()
-        user.active = 1
-        db.session.commit()
-        flash("Account reactivated, continue to login.")
-        return redirect(url_for('routes.login'))
-    return render_template("/reactivateAccount.html")
+        if check_password_hash(user.password, reactivate.password.data):
+            user.active = 1
+            db.session.add(user)
+            db.session.commit()
+            flash("Account reactivated, Welcome back!")
+            login_user(user)
+            return redirect(url_for('routes.homePage'))
+        else:
+            flash("Password does not match, please try again")
+            return redirect(url_for('routes.reactivateAccount'))
 
 @routes.route('/addToWishlist/<string:Title>/<string:Price>/<string:Asin>', methods=['GET', 'POST'])
 @login_required
@@ -108,6 +118,9 @@ def login():
         return redirect(url_for('routes.homePage'))
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()    #Fetches user in db with the samer username
+        if user.active == 0:
+            flash("You must reactivate your account")
+            return redirect(url_for('routes.reactivateAccount'))
         if user != None and check_password_hash(user.password, form.password.data):      #Compares password from form and db (Need to use bcrypt)
             login_user(user)    #Logins in user using login_manager
             flash("Welcome " + user.name)

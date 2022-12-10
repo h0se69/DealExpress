@@ -92,17 +92,15 @@ def addToWishlist(Title, Price, Asin):
             current_user.wishlist = Wishlist(user = current_user) #need to create wishlist first to use wishlist id when creating item
             db.session.add(current_user.wishlist)
             db.session.commit
-            print(current_user.wishlist)
-            item = Item(name=Title, price=Price, link=Asin, wishlist = current_user.wishlist)
+            item = Item(name=Title, price=Price, link=Asin, wishlist = current_user.wishlist)#adding first item of this users wishlist to item database
             db.session.add(item)
             db.session.commit()
             return "success"
-        #add item to item database, linking with current user's wishlist using current_user.wishlist.id
+        #if the user already has a wishlist, we can directly add the item using wishlist from early query
+        #add item to item database, linking with current user's wishlist'
         item = Item(name=Title, price=Price, link=Asin, wishlist = wishlist)
         db.session.add(item)
         db.session.commit()
-        
-        #https://stackoverflow.com/questions/49020321/one-to-one-relationship-db-model-not-working
         return "success"
 
 @routes.route('viewWishlist', methods=['GET', 'POST'])
@@ -110,7 +108,6 @@ def addToWishlist(Title, Price, Asin):
 def viewWishlist():
     wishlist = Wishlist.query.filter_by(user=current_user).first()
     items = Item.query.filter_by(wishlist=wishlist).all()
-    
     #query for wishlist of current user
     return render_template("viewWishlist.html", items = items)  
     

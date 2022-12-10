@@ -40,7 +40,8 @@ def createAccount():
             user = User(username=signUp.username.data, email=signUp.email.data, name=signUp.name.data, password=generate_password_hash(signUp.password.data, method = 'sha256'), active=1)#use password1 data from form, p2 would work too after our checks
             db.session.add(user)
             db.session.commit()
-            flash("Account created!")
+            login_user(user)
+            flash("Account created! You are now logged in.")
             return redirect(url_for('routes.homePage'))
     return render_template("/signUp.html", title = 'Create Account', form=signUp)     
 
@@ -85,32 +86,33 @@ def reactivateAccount():
 @login_required
 def addToWishlist(Title, Price, Asin):
     if request.method == 'GET':
-        #create user wishlist
-        current_user.wishlist = Wishlist(parent_id = current_user.id) #need to create wishlist first to use wishlist id when creating item
-        db.session.add(current_user.wishlist)
-        db.session.commit
-        print(current_user.wishlist)
+        wishlist = Wishlist.query.filter_by(user=current_user).first()
+        if not wishlist:
+            #create user wishlist
+            current_user.wishlist = Wishlist(user = current_user) #need to create wishlist first to use wishlist id when creating item
+            db.session.add(current_user.wishlist)
+            db.session.commit
+            print(current_user.wishlist)
+            item = Item(name=Title, price=Price, link=Asin, wishlist = current_user.wishlist)
+            db.session.add(item)
+            db.session.commit()
+            return "success"
         #add item to item database, linking with current user's wishlist using current_user.wishlist.id
-        item = Item(name=Title, price=Price, link=Asin, parent_id = current_user.wishlist.id)
+        item = Item(name=Title, price=Price, link=Asin, wishlist = wishlist)
         db.session.add(item)
         db.session.commit()
-        print(item.id)
+        
         #https://stackoverflow.com/questions/49020321/one-to-one-relationship-db-model-not-working
-        db.session.add(current_user.wishlist)
-        db.session.commit()
-
-        #print(Title)
-        #print(Price)
-        #print(Asin)
         return "success"
-        return render_template("/base.html")
 
 @routes.route('viewWishlist', methods=['GET', 'POST'])
 @login_required
 def viewWishlist():
-    items = Wishlist.query.filter_by(user_id=current_user.id).all() #query for rows in wishlist that are related to current user id, 
-    #as these hold itemIDs for items added to wishlist
-    return render_template("base.html")  
+    wishlist = Wishlist.query.filter_by(user=current_user).first()
+    items = Item.query.filter_by(wishlist=wishlist).all()
+    
+    #query for wishlist of current user
+    return render_template("viewWishlist.html", items = items)  
     
 
 #Login page

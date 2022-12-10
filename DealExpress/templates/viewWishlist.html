@@ -5,18 +5,18 @@
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Delete Account</title>
+        <title>Wishlist</title>
 
         <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/sign-in/">
     <link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     
         <!-- Favicons -->
-    <link rel="apple-touch-icon" href="/docs/5.2/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+    <link rel="apple-touch-icon" href="/CMPE133-Project/DealExpress/static/dealexpresslogo.png" sizes="180x180">
+    <link rel="icon" href="/CMPE133-Project/DealExpress/static/dealexpresslogo.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/CMPE133-Project/DealExpress/static/dealexpresslogo.png" sizes="16x16" type="image/png">
     <link rel="manifest" href="/docs/5.2/assets/img/favicons/manifest.json">
     <link rel="mask-icon" href="/docs/5.2/assets/img/favicons/safari-pinned-tab.svg" color="#712cf9">
-    <link rel="icon" href="/docs/5.2/assets/img/favicons/favicon.ico">
+    <link rel="icon" href="/CMPE133-Project/DealExpress/static/dealexpresslogo.png">
     <meta name="theme-color" content="#712cf9">
     
     
@@ -72,23 +72,28 @@
             -webkit-overflow-scrolling: touch;
           }
         </style>
-        <!-- Custom styles for this template -->
-        <link href="signin.css" rel="stylesheet">
-      </head>
-      <body class="text-center" style="margin-top: 100px;">
-      <body>
-        <img class="mb-4" src="{{url_for('static', filename='DealExpress.png')}}" alt="" width="72" height="57">
-        <h1 class="h3 mb-3 fw-normal">Delete Account</h1>
-        <p> Enter username to confirm</p>
-        <form action="" method="post" novalidate>
-        {{form.hidden_tag()}}
-        <p>
-            {{form.username(size=32)}}<br>
-            {{form.username.label()}}
-        </p>
-        <p>
-            {{form.submit}}
-        </form>
-        {% endblock %}
+        <div class="container">
+            <div class="row">
+                <table class="table table-sm">
+                    <thead>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Link</th>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{item.link}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endblock %}
       </body>
 </html>

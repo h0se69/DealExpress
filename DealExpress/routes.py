@@ -72,12 +72,16 @@ def reactivateAccount():
         username = reactivate.username.data
         user = User.query.filter_by(username=username).first()
         if check_password_hash(user.password, reactivate.password.data):
-            user.active = 1
-            db.session.add(user)
-            db.session.commit()
-            flash("Account reactivated, Welcome back!")
-            login_user(user)
-            return redirect(url_for('routes.homePage'))
+            if user.active == 1:
+                flash("You can not reactivate an active account")
+                return redirect(url_for('routes.reactivateAccount'))
+            else:
+                user.active = 1
+                db.session.add(user)
+                db.session.commit()
+                flash("Account reactivated, Welcome back!")
+                login_user(user)
+                return redirect(url_for('routes.homePage'))
         else:
             flash("Password does not match, please try again.")
             return redirect(url_for('routes.reactivateAccount'))
@@ -108,9 +112,6 @@ def addToWishlist(Title, Price, Asin):
 def viewWishlist():
     wishlist = Wishlist.query.filter_by(user=current_user).first() #query for wishlist of current user
     items = Item.query.filter_by(wishlist=wishlist).all()
-    if not wishlist:
-        flash("You have not added anything to your wishlist yet.")
-        return redirect(url_for())
     return render_template("viewWishlist.html", items = items)  
 
 @routes.route('/removeFromWishlist/<int:item_id>', methods=['GET','POST'])

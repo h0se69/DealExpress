@@ -106,11 +106,36 @@ def addToWishlist(Title, Price, Asin):
 @routes.route('viewWishlist', methods=['GET', 'POST'])
 @login_required
 def viewWishlist():
+    wishlist = Wishlist.query.filter_by(user=current_user).first() #query for wishlist of current user
+    items = Item.query.filter_by(wishlist=wishlist).all()
+    if not wishlist:
+        flash("You have not added anything to your wishlist yet.")
+        return redirect(url_for())
+    return render_template("viewWishlist.html", items = items)  
+
+@routes.route('/removeFromWishlist/<int:item_id>', methods=['GET','POST'])
+def removeFromWishlist(item_id):
+    items = Item.query.all()
+    for item in items:
+        if item.id == item_id:
+            db.session.delete(item)
+            db.session.commit()
+            flash("Removed item from Wishlist.")
+            return redirect(url_for('routes.viewWishlist'))
+
+@routes.route('/emptyWishlist', methods=['GET','POST'])
+def emptyWishlist():
+    user = User.query.filter_by(username=current_user.username).first()
     wishlist = Wishlist.query.filter_by(user=current_user).first()
     items = Item.query.filter_by(wishlist=wishlist).all()
-    #query for wishlist of current user
-    return render_template("viewWishlist.html", items = items)  
-    
+    if not items: #no items in wishlist
+        flash("Your wishlist is already empty! Visit the Categories page to add some items.")
+        return redirect(url_for('routes.viewWishlist'))
+    for item in items:
+        db.session.delete(item)
+        db.session.commit()
+    flash("Emptied wishlist.")        
+    return redirect(url_for('routes.viewWishlist'))    
 
 #Login page
 @routes.route('/login/', methods=["GET", "POST"])

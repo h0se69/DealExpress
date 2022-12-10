@@ -80,6 +80,7 @@
                         <th>Name</th>
                         <th>Price</th>
                         <th>Link</th>
+                        <th> <a href="{{url_for('routes.emptyWishlist')}}" class="btn btn-sm btn-danger">Empty Wishlist</a></th>
                     </thead>
                     <tbody>
                         {% for item in items %}
@@ -88,6 +89,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.price}}</td>
                             <td>{{item.link}}</td>
+                            <td> <a href="{{url_for('routes.removeFromWishlist', item_id=item.id)}}" class="btn btn-sm btn-danger">Delete</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

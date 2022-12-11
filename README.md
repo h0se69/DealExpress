@@ -15,9 +15,9 @@
 # Features:
 - [x] Fetch Discounts from API
 - [x] Categorize Products
-- [x] Notify Users for new/valid deals
+- [ ] Notify Users for new/valid deals
 - [x] Facilitate Account Management
-- [ ] Manage user wishlist
-- [ ] Filter Price Range
+- [x] Manage user wishlist
+- [ ] Filter Products by Price
 - [x] Facilitate Search for items
 - [x] Maintain/Remove Retailers from authorized list

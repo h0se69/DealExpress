@@ -17,7 +17,7 @@ routes = Blueprint('routes', __name__)
 def homePage():
     return render_template("home.html")
 
-@routes.route('/categories', methods=["GET"])
+@routes.route('/categories/', methods=["GET"])
 def basicCat():
     return render_template("Categories.html")
 
